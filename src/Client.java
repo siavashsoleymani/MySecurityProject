@@ -13,9 +13,14 @@ public class Client {
              InputStream socketInputStream = socket.getInputStream();
              DataOutputStream out = new DataOutputStream(socket.getOutputStream())) {
             String line = "";
+            Boolean isReceivingFile = false;
             while (!Protocol.SHUTDOWN_MSG.equals(line)) {
-                line = userInput.readLine();
-                out.writeUTF(EncryptUtil.encrypt(line, secretKey));
+                if (!isReceivingFile) {
+                    line = userInput.readLine();
+                    out.writeUTF(EncryptUtil.encrypt(line, secretKey));
+                    if (line.equalsIgnoreCase(Protocol.SEND_ME_NEW_FILE))
+                        isReceivingFile = true;
+                }
                 String commandFromNetwork = socketInput.readUTF();
                 commandFromNetwork = EncryptUtil.decrypt(commandFromNetwork, secretKey);
                 if (commandFromNetwork.equalsIgnoreCase(Protocol.SENDING_NEW_KEY)) {
@@ -34,8 +39,14 @@ public class Client {
                     try {
                         EncryptUtil.decryptFile(fileName, "dec-" + fileName, secretKey);
                     } catch (Exception e) {
+                        e.printStackTrace();
                     }
                     out.writeUTF(EncryptUtil.encrypt(Protocol.OK, secretKey));
+                } else if (commandFromNetwork.startsWith(Protocol.EOF)) {
+                    String[] split = commandFromNetwork.split("-");
+                    String fileName = split[1];
+                    FileChunk.mergeFiles(new File("./dec-rcv_" + fileName + ".001"), new File("recv-merged-" + fileName ));
+                    isReceivingFile = false;
                 }
             }
         }

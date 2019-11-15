@@ -12,19 +12,19 @@ public class EncryptUtil {
     private static Cipher cipher;
 
     public static String encrypt(String value, SecretKey secretKey) throws Exception {
-        IvParameterSpec iv = new IvParameterSpec(initVector.getBytes(StandardCharsets.UTF_8));
-        cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
-        byte[] encrypted = cipher.doFinal(value.getBytes());
-        return Base64.getEncoder().encodeToString(encrypted);
+        byte[] iv = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        IvParameterSpec ivspec = new IvParameterSpec(iv);
+        cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec);
+        return Base64.getEncoder().encodeToString(cipher.doFinal(value.getBytes(StandardCharsets.UTF_8)));
     }
 
     public static String decrypt(String encrypted, SecretKey secretKey) throws Exception {
-        IvParameterSpec iv = new IvParameterSpec(initVector.getBytes(StandardCharsets.UTF_8));
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-        cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
-        byte[] original = cipher.doFinal(Base64.getDecoder().decode(encrypted));
-        return new String(original);
+        byte[] iv = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        IvParameterSpec ivspec = new IvParameterSpec(iv);
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, ivspec);
+        return new String(cipher.doFinal(Base64.getDecoder().decode(encrypted)));
     }
 
     public static void encryptFile(File file, SecretKey secretKey) throws Exception {
@@ -34,12 +34,13 @@ public class EncryptUtil {
         fis.close();
         String content = new String(data, StandardCharsets.UTF_8);
 
-        cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-        IvParameterSpec iv = new IvParameterSpec(initVector.getBytes(StandardCharsets.UTF_8));
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
+        cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        byte[] iv = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        IvParameterSpec ivspec = new IvParameterSpec(iv);
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec);
         byte[] ivByte = cipher.getIV();
 
-        try (FileOutputStream fileOut = new FileOutputStream("enc-"+file.getName());
+        try (FileOutputStream fileOut = new FileOutputStream("enc_" + file.getName());
              CipherOutputStream cipherOut = new CipherOutputStream(fileOut, cipher)) {
             fileOut.write(ivByte);
             cipherOut.write(content.getBytes());
@@ -47,13 +48,14 @@ public class EncryptUtil {
     }
 
     public static String decryptFile(String fileName, String outPutFile, SecretKey secretKey) throws Exception {
-        cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+        cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         String content;
 
         try (FileInputStream fileIn = new FileInputStream(fileName)) {
-            IvParameterSpec iv = new IvParameterSpec(initVector.getBytes(StandardCharsets.UTF_8));
-            fileIn.read(iv.getIV());
-            cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
+            byte[] iv = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+            IvParameterSpec ivspec = new IvParameterSpec(iv);
+            fileIn.read(ivspec.getIV());
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, ivspec);
 
             try (
                     CipherInputStream cipherIn = new CipherInputStream(fileIn, cipher);

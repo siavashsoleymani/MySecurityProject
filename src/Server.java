@@ -2,6 +2,7 @@ import javax.crypto.SecretKey;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 
 public class Server {
     public static void main(String[] args) throws Exception {
@@ -19,18 +20,25 @@ public class Server {
                 line = EncryptUtil.decrypt(line, secretKey);
                 System.out.println(line);
                 if (line.equalsIgnoreCase(Protocol.GENERATE_KEY_MSG)) {
-                    secretKey = CustomKeyGenerator.generateRandomBasedKey();
                     dataOutputStream.writeUTF(EncryptUtil.encrypt(Protocol.SENDING_NEW_KEY, secretKey));
+                    secretKey = CustomKeyGenerator.generateRandomBasedKey();
                     oos.writeObject(secretKey);
                 } else if (line.equalsIgnoreCase(Protocol.SEND_ME_NEW_FILE)) {
-                    File file = new File("ss.txt");
-                    EncryptUtil.encryptFile(file, secretKey);
-                    dataOutputStream.writeUTF(EncryptUtil.encrypt(Protocol.SENDING_NEW_FILE + "-" + file.length() + "-" + file.getName(), secretKey));
-                    byte[] mybytearray = new byte[(int) file.length()];
-                    BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
-                    bis.read(mybytearray, 0, mybytearray.length);
-                    os.write(mybytearray, 0, mybytearray.length);
-                    os.flush();
+                    File file = new File("./ss.txt");
+                    FileChunk.splitFile(file);
+                    List<File> chunkFiles = FileChunk.listOfFilesToMerge(new File("./ss.txt.001"));
+                    for (File chunkFile : chunkFiles) {
+                        EncryptUtil.encryptFile(chunkFile, secretKey);
+                        chunkFile = new File("enc_" + chunkFile.getName());
+                        dataOutputStream.writeUTF(EncryptUtil.encrypt(Protocol.SENDING_NEW_FILE + "-" + chunkFile.length() + "-" + chunkFile.getName(), secretKey));
+                        byte[] mybytearray = new byte[(int) chunkFile.length()];
+                        BufferedInputStream bis = new BufferedInputStream(new FileInputStream(chunkFile));
+                        bis.read(mybytearray, 0, mybytearray.length);
+                        os.write(mybytearray, 0, mybytearray.length);
+                        os.flush();
+                    }
+                    dataOutputStream.writeUTF(EncryptUtil.encrypt(Protocol.EOF+"-"+"enc_" + file.getName(), secretKey));
+
                 } else {
                     dataOutputStream.writeUTF(EncryptUtil.encrypt(Protocol.OK, secretKey));
                 }

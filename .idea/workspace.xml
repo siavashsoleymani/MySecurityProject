@@ -2,19 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="eaf6c9cc-de30-4dca-9844-22dff62d34b5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SecurityProject.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Client.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Constants.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/CustomKeyGenerator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/EncryptUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Protocol.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Server.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ss.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/FileChunk.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/EncryptUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EncryptUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Protocol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Protocol.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ss.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ss.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -66,6 +60,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="FileChunk" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="FileChunk" />
+      <module name="SecurityProject" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Server" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Server" />
       <module name="SecurityProject" />
@@ -77,6 +78,7 @@
       <list>
         <item itemvalue="Application.Client" />
         <item itemvalue="Application.Server" />
+        <item itemvalue="Application.FileChunk" />
         <item itemvalue="Application.EncryptUtil" />
       </list>
     </recent_temporary>
@@ -91,8 +93,17 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1573756915394</updated>
-      <workItem from="1573756918792" duration="11235000" />
+      <workItem from="1573756918792" duration="12069000" />
+      <workItem from="1573797445947" duration="7266000" />
     </task>
+    <task id="LOCAL-00001" summary="initial commit">
+      <created>1573768170892</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1573768170892</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -103,10 +114,16 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="initial commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="initial commit" />
   </component>
 </project>
